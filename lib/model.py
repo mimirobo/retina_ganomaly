@@ -246,12 +246,17 @@ class Ganomaly:
         uploaded_netG = self.drive.CreateFile({'title': 'netG.pth'})
         uploaded_netG.SetContentFile('{}/netG.pth'.format(weight_dir))
         uploaded_netG.Upload()
-        print('Uploaded file with ID {}'.format(uploaded_netG.get('id')))
+        print('Uploaded netG file with ID {}'.format(uploaded_netG.get('id')))
 
         uploaded_netD = self.drive.CreateFile({'title': 'netD.pth'})
         uploaded_netD.SetContentFile('{}/netD.pth'.format(weight_dir))
         uploaded_netD.Upload()
-        print('Uploaded file with ID {}'.format(uploaded_netD.get('id')))
+        print('Uploaded netD file with ID {}'.format(uploaded_netD.get('id')))
+
+        uploaded_log = self.drive.CreateFile({'title': 'loss_log.txt'})
+        uploaded_log.SetContentFile('{}/../../loss_log.txt'.format(weight_dir))
+        uploaded_log.Upload()
+        print('Uploaded log file with ID {}'.format(uploaded_log.get('id')))
 
     def train_epoch(self):
         """ Train the model for one epoch.
