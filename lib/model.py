@@ -387,8 +387,8 @@ class Ganomaly:
             auc = evaluate(self.gt_labels, self.an_scores, metric=self.opt.metric)
             performance = OrderedDict([('Avg Run Time (ms/batch)', self.times), ('AUC', auc)])
             torch.set_printoptions(threshold='nan')
-            print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores)
-            print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels)
+            print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
+            print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
 
             if self.opt.display_id > 0 and self.opt.phase == 'test':
                 counter_ratio = float(epoch_iter) / len(self.dataloader['test'].dataset)
