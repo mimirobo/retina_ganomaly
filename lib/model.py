@@ -7,8 +7,8 @@ from collections import OrderedDict
 import os
 import time
 import numpy as np
-#from tqdm import tqdm
-from tqdm import tqdm_notebook as tqdm
+from tqdm import tqdm
+#from tqdm import tqdm_notebook as tqdm
 
 from torch.autograd import Variable
 import torch.optim as optim
