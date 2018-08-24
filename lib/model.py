@@ -386,8 +386,9 @@ class Ganomaly:
             # auc, eer = roc(self.gt_labels, self.an_scores)
             auc = evaluate(self.gt_labels, self.an_scores, metric=self.opt.metric)
             performance = OrderedDict([('Avg Run Time (ms/batch)', self.times), ('AUC', auc)])
-            print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
-            print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
+            np.set_printoptions(threshold=np.nan)
+            print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores.numpy()))
+            print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels.numpy()))
 
             if self.opt.display_id > 0 and self.opt.phase == 'test':
                 counter_ratio = float(epoch_iter) / len(self.dataloader['test'].dataset)
