@@ -20,6 +20,11 @@ from lib.visualizer import Visualizer
 from lib.loss import l2_loss
 from lib.evaluate import evaluate
 
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from google.colab import auth
+from oauth2client.client import GoogleCredentials
+
 ##
 class Ganomaly:
     """GANomaly Class
@@ -233,8 +238,21 @@ class Ganomaly:
                    '%s/netG.pth' % (weight_dir))
         torch.save({'epoch': epoch + 1, 'state_dict': self.netd.state_dict()},
                    '%s/netD.pth' % (weight_dir))
+        #upload the saved weights to google drive
+        self.upload_weights_to_google_drive(weight_dir)
 
     ##
+    def upload_weights_to_google_drive(self, weight_dir):
+        uploaded_netG = self.drive.CreateFile({'title': 'netG.pth'})
+        uploaded_netG.SetContentFile('{}/netG.pth'.format(weight_dir))
+        uploaded_netG.Upload()
+        print('Uploaded file with ID {}'.format(uploaded_netG.get('id')))
+
+        uploaded_netD = self.drive.CreateFile({'title': 'netD.pth'})
+        uploaded_netD.SetContentFile('{}/netD.pth'.format(weight_dir))
+        uploaded_netD.Upload()
+        print('Uploaded file with ID {}'.format(uploaded_netD.get('id')))
+
     def train_epoch(self):
         """ Train the model for one epoch.
         """
@@ -264,6 +282,15 @@ class Ganomaly:
         # self.visualizer.print_current_errors(self.epoch, errors)
     ##
     def train(self):
+
+        """Create Google PyDrive Client
+        """
+        auth.authenticate_user()
+        gauth = GoogleAuth()
+        gauth.credentials = GoogleCredentials.get_application_default()
+        self.drive = GoogleDrive(gauth)
+
+
         """ Train the model
         """
 
