@@ -40,7 +40,8 @@ model = Ganomaly(opt, dataloader)
 
 ##
 # TRAIN MODEL
-model.train()
+#model.train()
+model.test()
 
 # if __name__ == '__main__':
 #     main()
