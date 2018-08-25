@@ -41,7 +41,10 @@ model = Ganomaly(opt, dataloader)
 ##
 # TRAIN MODEL
 #model.train()
-model.test()
+if opt.phase == 'test':
+    model.test()
+else:
+    model.train()
 
 # if __name__ == '__main__':
 #     main()

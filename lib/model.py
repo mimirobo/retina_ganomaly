@@ -384,7 +384,7 @@ class Ganomaly:
             # Scale error vector between [0, 1]
             self.an_scores = (self.an_scores - torch.min(self.an_scores)) / (torch.max(self.an_scores) - torch.min(self.an_scores))
             # auc, eer = roc(self.gt_labels, self.an_scores)
-            auc = evaluate(self.gt_labels, self.an_scores, metric=self.opt.metric)
+            auc = evaluate(self.gt_labels, self.an_scores, self.opt, metric=self.opt.metric)
             performance = OrderedDict([('Avg Run Time (ms/batch)', self.times), ('AUC', auc)])
             #if(auc >= self.best_auc):
             #    torch.set_printoptions(profile="full")
@@ -395,6 +395,12 @@ class Ganomaly:
                 torch.set_printoptions(profile="full")
                 print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
                 print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
+            else:
+                if(auc >= self.best_auc):
+                    torch.set_printoptions(profile="full")
+                    print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
+                    print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
+
             if self.opt.display_id > 0 and self.opt.phase == 'test':
                 counter_ratio = float(epoch_iter) / len(self.dataloader['test'].dataset)
                 self.visualizer.plot_performance(self.epoch, counter_ratio, performance)
