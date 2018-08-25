@@ -303,7 +303,7 @@ class Ganomaly:
         ##
         # TRAIN
         self.total_steps = 0
-        best_auc = 0
+        self.best_auc = 0
 
         # Train for niter epochs.
         print(">> Training model %s." % self.name())
@@ -311,10 +311,10 @@ class Ganomaly:
             # Train for one epoch
             self.train_epoch()
             res = self.test()
-            if res['AUC'] > best_auc:
-                best_auc = res['AUC']
+            if res['AUC'] > self.best_auc:
+                self.best_auc = res['AUC']
                 self.save_weights(self.epoch)
-            self.visualizer.print_current_performance(res, best_auc)
+            self.visualizer.print_current_performance(res, self.best_auc)
         print(">> Training model %s.[Done]" % self.name())
 
     ##
@@ -386,9 +386,10 @@ class Ganomaly:
             # auc, eer = roc(self.gt_labels, self.an_scores)
             auc = evaluate(self.gt_labels, self.an_scores, metric=self.opt.metric)
             performance = OrderedDict([('Avg Run Time (ms/batch)', self.times), ('AUC', auc)])
-            torch.set_printoptions(profile="full")
-            print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
-            print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
+            if(auc >= self.best_auc):
+                torch.set_printoptions(profile="full")
+                print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
+                print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
 
             if self.opt.display_id > 0 and self.opt.phase == 'test':
                 counter_ratio = float(epoch_iter) / len(self.dataloader['test'].dataset)
