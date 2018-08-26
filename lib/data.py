@@ -145,7 +145,7 @@ def load_data(opt):
     else:
         splits = ['train', 'test']
         drop_last_batch = {'train': True, 'test': False}
-        shuffle = {'train': True, 'test': True}
+        shuffle = {'train': True, 'test': False}
         transform = transforms.Compose([transforms.Scale(opt.isize),
                                         transforms.CenterCrop(opt.isize),
                                         transforms.Grayscale(),
