@@ -21,9 +21,9 @@ rc('text', usetex=True)
 
 def evaluate(labels, scores, opt, metric='roc'):
     if metric == 'roc':
-        #if opt.phase == 'test':
-        #    return roc(labels, scores, True)
-        #else:
+        if opt.phase == 'test':
+            return roc(labels, scores, '/content')
+        else:
         return roc(labels, scores)
     elif metric == 'auprc':
         return auprc(labels, scores)
