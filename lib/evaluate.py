@@ -24,7 +24,7 @@ def evaluate(labels, scores, opt, metric='roc'):
         if opt.phase == 'test':
             return roc(labels, scores, '/content')
         else:
-        return roc(labels, scores)
+            return roc(labels, scores)
     elif metric == 'auprc':
         return auprc(labels, scores)
     elif metric == 'f1_score':
