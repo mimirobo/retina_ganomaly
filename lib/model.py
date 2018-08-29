@@ -391,15 +391,15 @@ class Ganomaly:
             #    print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
             #    print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
 
-            if self.opt.phase == 'test':
-                torch.set_printoptions(profile="full")
-                print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
-                print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
-            else:
-                if(auc >= self.best_auc):
-                    torch.set_printoptions(profile="full")
-                    print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
-                    print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
+            # if self.opt.phase == 'test':
+            #     torch.set_printoptions(profile="full")
+            #     print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
+            #     print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
+            # else:
+            #     if(auc >= self.best_auc):
+            #         torch.set_printoptions(profile="full")
+            #         print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
+            #         print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
 
             if self.opt.display_id > 0 and self.opt.phase == 'test':
                 counter_ratio = float(epoch_iter) / len(self.dataloader['test'].dataset)
