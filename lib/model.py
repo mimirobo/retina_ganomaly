@@ -265,7 +265,7 @@ class Ganomaly:
 
         self.netg.train()
         epoch_iter = 0
-        for data in tqdm(self.dataloader['train'], leave=False, total=len(self.dataloader['train'])):
+        for data in tqdm(self.dataloader['train'], leave=False, disable=True, total=len(self.dataloader['train'])):
             self.total_steps += self.opt.batchsize
             epoch_iter += self.opt.batchsize
 
@@ -285,7 +285,7 @@ class Ganomaly:
                     self.visualizer.display_current_images(reals, fakes, fixed)
 
         print(">> Training model %s. Epoch %d/%d" % (self.name(), self.epoch+1, self.opt.niter))
-        # self.visualizer.print_current_errors(self.epoch, errors)
+        self.visualizer.print_current_errors(self.epoch, errors)
     ##
     def train(self):
 
