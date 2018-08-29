@@ -157,7 +157,7 @@ class Ganomaly:
         """ Initialize the weights of netD
         """
         self.netd.apply(weights_init)
-        print('Reloading d net')
+        #print('Reloading d net')
 
     ##
     def update_netg(self):
