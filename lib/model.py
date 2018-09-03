@@ -48,6 +48,11 @@ class Ganomaly:
         self.tst_dir = os.path.join(self.opt.outf, self.opt.name, 'test')
         self.device = torch.device("cuda:0" if self.opt.gpu_ids!=-1 else "cpu")
 
+        # GDrive Parameters
+        self.gdrive_netg_created = False
+        self.gdrive_netd_created = False
+        self.gdrive_loss_created = False
+
         # -- Discriminator attributes.
         self.out_d_real = None
         self.feat_real = None
@@ -244,20 +249,32 @@ class Ganomaly:
 
     ##
     def upload_weights_to_google_drive(self, weight_dir):
-        uploaded_netG = self.drive.CreateFile({'title': 'netG.pth'})
-        uploaded_netG.SetContentFile('{}/netG.pth'.format(weight_dir))
-        uploaded_netG.Upload()
-        print('Uploaded netG file with ID {}'.format(uploaded_netG.get('id')))
+        # Create NetG First Time
+        if not self.gdrive_netg_created:
+            self.uploaded_netG = self.drive.CreateFile({'title': 'netG.pth'})
+            self.gdrive_netg_created = True
+        # Update NetG
+        self.uploaded_netG.SetContentFile('{}/netG.pth'.format(weight_dir))
+        self.uploaded_netG.Upload()
+        print('Uploaded netG file with ID {}'.format(self.uploaded_netG.get('id')))
 
-        uploaded_netD = self.drive.CreateFile({'title': 'netD.pth'})
-        uploaded_netD.SetContentFile('{}/netD.pth'.format(weight_dir))
-        uploaded_netD.Upload()
-        print('Uploaded netD file with ID {}'.format(uploaded_netD.get('id')))
+        # Create NetD First Time
+        if not self.gdrive_netd_created:
+            self.uploaded_netD = self.drive.CreateFile({'title': 'netD.pth'})
+            self.gdrive_netd_created = True
+        # Update NetD
+        self.uploaded_netD.SetContentFile('{}/netD.pth'.format(weight_dir))
+        self.uploaded_netD.Upload()
+        print('Uploaded netD file with ID {}'.format(self.uploaded_netD.get('id')))
 
-        uploaded_log = self.drive.CreateFile({'title': 'loss_log.txt'})
-        uploaded_log.SetContentFile('{}/../../loss_log.txt'.format(weight_dir))
-        uploaded_log.Upload()
-        print('Uploaded log file with ID {}'.format(uploaded_log.get('id')))
+        # Create LossLog First Time
+        if not self.gdrive_loss_created:
+            self.uploaded_log = self.drive.CreateFile({'title': 'loss_log.txt'})
+            self.gdrive_loss_created = True
+        # Update LossLog
+        self.uploaded_log.SetContentFile('{}/../../loss_log.txt'.format(weight_dir))
+        self.uploaded_log.Upload()
+        print('Uploaded log file with ID {}'.format(self.uploaded_log.get('id')))
 
     def train_epoch(self):
         """ Train the model for one epoch.
@@ -391,11 +408,16 @@ class Ganomaly:
             #    print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
             #    print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
 
-            if self.opt.phase == 'test':
+            if auc >= self.best_auc:
                 torch.set_printoptions(profile="full")
                 print("\nAUC:{}".format(auc))
                 print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
-                print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
+                #print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
+            # if self.opt.phase == 'test':
+            #     torch.set_printoptions(profile="full")
+            #     print("\nAUC:{}".format(auc))
+            #     print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
+            #     print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
             # else:
             #     if(auc >= self.best_auc):
             #         torch.set_printoptions(profile="full")
