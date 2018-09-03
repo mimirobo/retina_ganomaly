@@ -44,6 +44,9 @@ def roc(labels, scores, saveto=None):
 
     # True/False Positive Rates.
     fpr, tpr, _ = roc_curve(labels, scores)
+    
+    print("FPR:{}".format(fpr))
+    print("TPR:{}".format(tpr))
     roc_auc = auc(fpr, tpr)
 
     # Equal Error Rate
