@@ -148,9 +148,14 @@ def load_data(opt):
         shuffle = {'train': True, 'test': False}
         transform = transforms.Compose([transforms.Scale(opt.isize),
                                         transforms.CenterCrop(opt.isize),
-                                        transforms.Grayscale(),
                                         transforms.ToTensor(),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)), ])
+        # transform = transforms.Compose([transforms.Scale(opt.isize),
+        #                                 transforms.CenterCrop(opt.isize),
+        #                                 transforms.Grayscale(),
+        #                                 transforms.ToTensor(),
+        #                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)), ])
+                                        
 
         dataset = {x: ImageFolder(os.path.join(opt.dataroot, x), transform) for x in splits}
         dataloader = {x: torch.utils.data.DataLoader(dataset=dataset[x],
