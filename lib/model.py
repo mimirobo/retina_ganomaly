@@ -240,7 +240,7 @@ class Ganomaly:
         torch.save({'epoch': epoch + 1, 'state_dict': self.netd.state_dict()},
                    '%s/netD.pth' % (weight_dir))
         #upload the saved weights to google drive
-        #self.upload_weights_to_google_drive(weight_dir)
+        self.upload_weights_to_google_drive(weight_dir)
 
     ##
     def upload_weights_to_google_drive(self, weight_dir):
