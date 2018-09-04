@@ -408,10 +408,10 @@ class Ganomaly:
             #    print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
             #    print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
 
-            if auc >= self.best_auc:
-                torch.set_printoptions(profile="full")
-                print("\nAUC:{}".format(auc))
-                print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
+            # if auc >= self.best_auc:
+            #     torch.set_printoptions(profile="full")
+            #     print("\nAUC:{}".format(auc))
+            #     print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
                 #print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
             # if self.opt.phase == 'test':
             #     torch.set_printoptions(profile="full")
