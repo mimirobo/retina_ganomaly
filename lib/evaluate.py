@@ -9,7 +9,8 @@ Returns:
 ##
 # LIBRARIES
 from __future__ import print_function
-
+import sys
+sys.path.insert(0, '/content/ganomaly/lib')
 import os
 from sklearn.metrics import roc_curve, auc, average_precision_score, f1_score
 import calculate_roc as rockit
