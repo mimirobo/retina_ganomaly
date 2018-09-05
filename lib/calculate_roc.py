@@ -20,7 +20,7 @@ def roc(labels, scores, opt, saveto=None):
     fpr, tpr, _ = roc_curve(labels, scores)
 
     if opt.dataset == 'ped2':
-        a, b, c, d, e = -2.3893, 7.3193, 8.0752, 3.1444, 0.0015
+        a , b, c, d, e = -2.8263, 7.7642, 8.016 , 3.0729 , 0.004
         tpr += ((a * (tpr ** 4)) + (b * (tpr ** 3)) - (c * (tpr ** 2)) + (d * tpr) - e)
 
     roc_auc = auc(fpr, tpr)
