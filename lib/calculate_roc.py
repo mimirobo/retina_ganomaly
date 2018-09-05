@@ -29,7 +29,7 @@ def roc(labels, scores, opt, saveto=None):
     eer = brentq(lambda x: 1. - x - interp1d(fpr, tpr)(x), 0., 1.)
 
     if saveto:
-        plt.figure()
+        #plt.figure()
         lw = 2
         plt.plot(fpr, tpr, color='darkorange', lw=lw, label='(AUC = %0.2f, EER = %0.2f)' % (roc_auc, eer))
         plt.plot([eer], [1 - eer], marker='o', markersize=5, color="navy")
