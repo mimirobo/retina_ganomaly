@@ -24,7 +24,7 @@ rc('text', usetex=True)
 def evaluate(labels, scores, opt, metric='roc'):
     if metric == 'roc':
         #if opt.phase == 'test':
-        return rockit.roc(labels, scores, opt)
+        return rockit.roc(labels, scores, opt, True)
         #else:
         #return roc(labels, scores)
     elif metric == 'auprc':
