@@ -40,9 +40,9 @@ model = Ganomaly(opt, dataloader)
 
 ##
 # TRAIN MODEL
-#model.train()
+model.train()
 #if opt.phase == 'test':
-model.test()
+#model.test()
 #else:
 #model.train()
 
