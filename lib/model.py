@@ -21,10 +21,10 @@ from lib.visualizer import Visualizer
 from lib.loss import l2_loss
 from lib.evaluate import evaluate
 
-from pydrive.auth import GoogleAuth
-from pydrive.drive import GoogleDrive
-from google.colab import auth
-from oauth2client.client import GoogleCredentials
+# from pydrive.auth import GoogleAuth
+# from pydrive.drive import GoogleDrive
+# from google.colab import auth
+# from oauth2client.client import GoogleCredentials
 
 ##
 class Ganomaly:
@@ -49,9 +49,9 @@ class Ganomaly:
         self.device = torch.device("cuda:0" if self.opt.gpu_ids!=-1 else "cpu")
 
         # GDrive Parameters
-        self.gdrive_netg_created = False
-        self.gdrive_netd_created = False
-        self.gdrive_loss_created = False
+        # self.gdrive_netg_created = False
+        # self.gdrive_netd_created = False
+        # self.gdrive_loss_created = False
 
         # -- Discriminator attributes.
         self.out_d_real = None
@@ -245,36 +245,36 @@ class Ganomaly:
         torch.save({'epoch': epoch + 1, 'state_dict': self.netd.state_dict()},
                    '%s/netD.pth' % (weight_dir))
         #upload the saved weights to google drive
-        self.upload_weights_to_google_drive(weight_dir)
+        # self.upload_weights_to_google_drive(weight_dir)
 
     ##
-    def upload_weights_to_google_drive(self, weight_dir):
+    # def upload_weights_to_google_drive(self, weight_dir):
         # Create NetG First Time
-        if not self.gdrive_netg_created:
-            self.uploaded_netG = self.drive.CreateFile({'title': 'netG.pth'})
-            self.gdrive_netg_created = True
+        # if not self.gdrive_netg_created:
+        #     self.uploaded_netG = self.drive.CreateFile({'title': 'netG.pth'})
+        #     self.gdrive_netg_created = True
         # Update NetG
-        self.uploaded_netG.SetContentFile('{}/netG.pth'.format(weight_dir))
-        self.uploaded_netG.Upload()
-        print('Uploaded netG file with ID {}'.format(self.uploaded_netG.get('id')))
+        # self.uploaded_netG.SetContentFile('{}/netG.pth'.format(weight_dir))
+        # self.uploaded_netG.Upload()
+        # print('Uploaded netG file with ID {}'.format(self.uploaded_netG.get('id')))
 
         # Create NetD First Time
-        if not self.gdrive_netd_created:
-            self.uploaded_netD = self.drive.CreateFile({'title': 'netD.pth'})
-            self.gdrive_netd_created = True
+        # if not self.gdrive_netd_created:
+        #     self.uploaded_netD = self.drive.CreateFile({'title': 'netD.pth'})
+        #     self.gdrive_netd_created = True
         # Update NetD
-        self.uploaded_netD.SetContentFile('{}/netD.pth'.format(weight_dir))
-        self.uploaded_netD.Upload()
-        print('Uploaded netD file with ID {}'.format(self.uploaded_netD.get('id')))
+        # self.uploaded_netD.SetContentFile('{}/netD.pth'.format(weight_dir))
+        # self.uploaded_netD.Upload()
+        # print('Uploaded netD file with ID {}'.format(self.uploaded_netD.get('id')))
 
         # Create LossLog First Time
-        if not self.gdrive_loss_created:
-            self.uploaded_log = self.drive.CreateFile({'title': 'loss_log.txt'})
-            self.gdrive_loss_created = True
+        # if not self.gdrive_loss_created:
+        #     self.uploaded_log = self.drive.CreateFile({'title': 'loss_log.txt'})
+        #     self.gdrive_loss_created = True
         # Update LossLog
-        self.uploaded_log.SetContentFile('{}/../../loss_log.txt'.format(weight_dir))
-        self.uploaded_log.Upload()
-        print('Uploaded log file with ID {}'.format(self.uploaded_log.get('id')))
+        # self.uploaded_log.SetContentFile('{}/../../loss_log.txt'.format(weight_dir))
+        # self.uploaded_log.Upload()
+        # print('Uploaded log file with ID {}'.format(self.uploaded_log.get('id')))
 
     def train_epoch(self):
         """ Train the model for one epoch.
@@ -306,12 +306,12 @@ class Ganomaly:
     ##
     def train(self):
 
-        """Create Google PyDrive Client
-        """
-        auth.authenticate_user()
-        gauth = GoogleAuth()
-        gauth.credentials = GoogleCredentials.get_application_default()
-        self.drive = GoogleDrive(gauth)
+        # """Create Google PyDrive Client
+        # """
+        # auth.authenticate_user()
+        # gauth = GoogleAuth()
+        # gauth.credentials = GoogleCredentials.get_application_default()
+        # self.drive = GoogleDrive(gauth)
 
 
         """ Train the model
