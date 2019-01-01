@@ -45,7 +45,7 @@ def roc(labels, scores, saveto=None):
     roc_auc = dict()
 
     # True/False Positive Rates.
-    fpr, tpr, _ = roc_curve(labels.numpy(), scores.numpy())
+    fpr, tpr, _ = roc_curve(labels.cpu(), scores.cpu())
     
     #print("FPR:{}".format(fpr))
     #print("TPR:{}".format(tpr))
