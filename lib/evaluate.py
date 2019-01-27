@@ -13,7 +13,6 @@ import sys
 sys.path.insert(0, '/content/retina_ganomaly/lib')
 import os
 from sklearn.metrics import roc_curve, auc, average_precision_score, f1_score
-import calculate_roc as rockit
 from scipy.optimize import brentq
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
@@ -23,9 +22,6 @@ rc('text', usetex=True)
 
 def evaluate(labels, scores, opt, metric='roc'):
     if metric == 'roc':
-        #if opt.phase == 'test':
-        #return rockit.roc(labels, scores, opt, True)
-        #else:
         return roc(labels, scores)
     elif metric == 'auprc':
         return auprc(labels, scores)
