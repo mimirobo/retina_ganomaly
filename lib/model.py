@@ -1,14 +1,8 @@
-"""GANomaly
-"""
-# pylint: disable=C0301,E1101,W0622,C0103,R0902,R0915
-
-##
 from collections import OrderedDict
 import os
 import time
 import numpy as np
 from tqdm import tqdm
-#from tqdm import tqdm_notebook as tqdm
 
 from torch.autograd import Variable
 import torch.optim as optim
@@ -21,25 +15,14 @@ from lib.visualizer import Visualizer
 from lib.loss import l2_loss
 from lib.evaluate import evaluate
 
-# from pydrive.auth import GoogleAuth
-# from pydrive.drive import GoogleDrive
-# from google.colab import auth
-# from oauth2client.client import GoogleCredentials
-
 ##
 class Ganomaly:
-    """GANomaly Class
-    """
-
     @staticmethod
     def name():
-        """Return name of the class.
-        """
         return 'Ganomaly'
 
     def __init__(self, opt, dataloader=None):
         super(Ganomaly, self).__init__()
-        ##
         # Initalize variables.
         self.opt = opt
         self.visualizer = Visualizer(opt)
@@ -47,12 +30,6 @@ class Ganomaly:
         self.trn_dir = os.path.join(self.opt.outf, self.opt.name, 'train')
         self.tst_dir = os.path.join(self.opt.outf, self.opt.name, 'test')
         self.device = torch.device("cuda:0" if self.opt.gpu_ids!=-1 else "cpu")
-
-        # GDrive Parameters
-        # self.gdrive_netg_created = False
-        # self.gdrive_netd_created = False
-        # self.gdrive_loss_created = False
-
         # -- Discriminator attributes.
         self.out_d_real = None
         self.feat_real = None
@@ -91,10 +68,6 @@ class Ganomaly:
             self.netg.load_state_dict(torch.load(os.path.join(self.opt.resume, 'netG.pth'))['state_dict'])
             self.netd.load_state_dict(torch.load(os.path.join(self.opt.resume, 'netD.pth'))['state_dict'])
             print("\tDone.\n")
-
-        # print(self.netg)
-        # print(self.netd)
-
         ##
         # Loss Functions
         self.bce_criterion = nn.BCELoss()
@@ -244,42 +217,10 @@ class Ganomaly:
                    '%s/netG.pth' % (weight_dir))
         torch.save({'epoch': epoch + 1, 'state_dict': self.netd.state_dict()},
                    '%s/netD.pth' % (weight_dir))
-        #upload the saved weights to google drive
-        # self.upload_weights_to_google_drive(weight_dir)
-
-    ##
-    # def upload_weights_to_google_drive(self, weight_dir):
-        # Create NetG First Time
-        # if not self.gdrive_netg_created:
-        #     self.uploaded_netG = self.drive.CreateFile({'title': 'netG.pth'})
-        #     self.gdrive_netg_created = True
-        # Update NetG
-        # self.uploaded_netG.SetContentFile('{}/netG.pth'.format(weight_dir))
-        # self.uploaded_netG.Upload()
-        # print('Uploaded netG file with ID {}'.format(self.uploaded_netG.get('id')))
-
-        # Create NetD First Time
-        # if not self.gdrive_netd_created:
-        #     self.uploaded_netD = self.drive.CreateFile({'title': 'netD.pth'})
-        #     self.gdrive_netd_created = True
-        # Update NetD
-        # self.uploaded_netD.SetContentFile('{}/netD.pth'.format(weight_dir))
-        # self.uploaded_netD.Upload()
-        # print('Uploaded netD file with ID {}'.format(self.uploaded_netD.get('id')))
-
-        # Create LossLog First Time
-        # if not self.gdrive_loss_created:
-        #     self.uploaded_log = self.drive.CreateFile({'title': 'loss_log.txt'})
-        #     self.gdrive_loss_created = True
-        # Update LossLog
-        # self.uploaded_log.SetContentFile('{}/../../loss_log.txt'.format(weight_dir))
-        # self.uploaded_log.Upload()
-        # print('Uploaded log file with ID {}'.format(self.uploaded_log.get('id')))
 
     def train_epoch(self):
         """ Train the model for one epoch.
         """
-
         self.netg.train()
         epoch_iter = 0
         for data in tqdm(self.dataloader['train'], leave=False, disable=True, total=len(self.dataloader['train'])):
@@ -291,32 +232,17 @@ class Ganomaly:
 
             if self.total_steps % self.opt.print_freq == 0:
                 errors = self.get_errors()
-                if self.opt.display:
-                    counter_ratio = float(epoch_iter) / len(self.dataloader['train'].dataset)
-                    self.visualizer.plot_current_errors(self.epoch, counter_ratio, errors)
 
             if self.total_steps % self.opt.save_image_freq == 0:
                 reals, fakes, fixed = self.get_current_images()
                 self.visualizer.save_current_images(self.epoch, reals, fakes, fixed)
-                if self.opt.display:
-                    self.visualizer.display_current_images(reals, fakes, fixed)
 
         print(">> Training model %s. Epoch %d/%d" % (self.name(), self.epoch+1, self.opt.niter))
         self.visualizer.print_current_errors(self.epoch, errors)
     ##
     def train(self):
-
-        # """Create Google PyDrive Client
-        # """
-        # auth.authenticate_user()
-        # gauth = GoogleAuth()
-        # gauth.credentials = GoogleCredentials.get_application_default()
-        # self.drive = GoogleDrive(gauth)
-
-
         """ Train the model
         """
-
         ##
         # TRAIN
         self.total_steps = 0
@@ -401,30 +327,11 @@ class Ganomaly:
             # Scale error vector between [0, 1]
             self.an_scores = (self.an_scores - torch.min(self.an_scores)) / (torch.max(self.an_scores) - torch.min(self.an_scores))
             # auc, eer = roc(self.gt_labels, self.an_scores)
-            auc = evaluate(self.gt_labels, self.an_scores, self.opt, metric=self.opt.metric)
+            auc, threshold = evaluate(self.gt_labels, self.an_scores, self.opt, metric=self.opt.metric)
             performance = OrderedDict([('Avg Run Time (ms/batch)', self.times), ('AUC', auc)])
-            #if(auc >= self.best_auc):
-            #    torch.set_printoptions(profile="full")
-            #    print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
-            #    print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
-
-            # if auc >= self.best_auc:
-            #     torch.set_printoptions(profile="full")
-            #     print("\nAUC:{}".format(auc))
-            #     print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
-            #     print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
-            if self.opt.phase == 'test':
+            if(auc >= self.best_auc):
                 torch.set_printoptions(profile="full")
-                print("\nAUC:{}".format(auc))
-                print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
-                print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
-            # else:
-            #     if(auc >= self.best_auc):
-            #         torch.set_printoptions(profile="full")
-            #         print('\n\n*****************\nScores:\n{}\n*****************\n'.format(self.an_scores))
-            #         print('\n\n*****************\nGT Labels:\n{}\n*****************\n'.format(self.gt_labels))
-
-            if self.opt.display_id > 0 and self.opt.phase == 'test':
-                counter_ratio = float(epoch_iter) / len(self.dataloader['test'].dataset)
-                self.visualizer.plot_performance(self.epoch, counter_ratio, performance)
+                print('\n\n*****************Scores:\n{}\n*****************\n'.format(self.an_scores))
+                print('\n\n*****************GT Labels:\n{}\n*****************\n'.format(self.gt_labels))
+                print('\n\n*****************AUC:{}  Threshold:\n{}\n*****************\n'.format(auc, threshold))
             return performance

@@ -45,7 +45,7 @@ def roc(labels, scores, saveto=None):
     roc_auc = dict()
 
     # True/False Positive Rates.
-    fpr, tpr, _ = roc_curve(labels.cpu(), scores.cpu())
+    fpr, tpr, threshold = roc_curve(labels.cpu(), scores.cpu())
     
     #print("FPR:{}".format(fpr))
     #print("TPR:{}".format(tpr))
@@ -69,7 +69,7 @@ def roc(labels, scores, saveto=None):
         plt.savefig(os.path.join(saveto, "ROC.pdf"))
         plt.close()
 
-    return roc_auc
+    return roc_auc , threshold
 
 def auprc(labels, scores):
     ap = average_precision_score(labels, scores)
